@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 import org.apache.commons.io.FileUtils;
 import org.w3c.dom.*;
@@ -168,36 +169,9 @@ public class genericFunctionLib {
 	}
 	
 	
-	/*public static String getSpecificFHIRResource(String fileFullPath, String FHIRResourceName) throws FileNotFoundException
-    {
-          String FHIRResourceFileName = null;     
-          File folder = new File(fileFullPath);
-          File[] listOfFiles = folder.listFiles();
-             if (listOfFiles.length==0)
-               {
-               return("0");  
-            }
-          else
-            {
-               for (int i = 0; i < listOfFiles.length; i++) 
-                   {
-                    if (listOfFiles[i].isFile()) 
-            	   
-                          {                  
-                      String file = new File(fileFullPath+ "\\" +listOfFiles[i].getName()).toString();
-                      System.out.println(file);
-                      FHIRResourceFileName = file;
-                      break;
-                                        
-                          }
-                   
-               }return(FHIRResourceFileName);
-               
-           
-            }
-             
-    }*/
+
 	
+	/*
 	public static String getSpecificFHIRResource(String fileFullPath, String FHIRResourceName) throws ParserConfigurationException, SAXException, IOException
     {
           String FHIRResourceFileName = null;     
@@ -230,7 +204,56 @@ public class genericFunctionLib {
             }
 			return FHIRResourceFileName;
 		
-    }
+    }*/
+	
+	public static String getSpecificFHIRResource(String fileFullPath, String FHIRResourceName)
+	{
+	      File FHIRResourceFileName = null;	
+	      File folder = new File(fileFullPath);
+	      File[] listOfFiles = folder.listFiles();
+		  if (listOfFiles.length==0)
+		    {
+	           return("0");  
+	        }
+	      else
+	        {
+	           for (int i = 0; i < listOfFiles.length; i++) 
+		        {
+	                if (listOfFiles[i].isFile()) 
+			        {			
+	                  File file = new File(fileFullPath+ "\\" +listOfFiles[i].getName());
+	                  try 
+	                    {
+						   Scanner scanner = new Scanner(file);				
+					        int lineNum = 0;
+					        while (scanner.hasNextLine()) 
+						    {
+						        String line = scanner.nextLine();
+								line = line.replaceAll("&lt;","<");
+								line = line.replaceAll("&gt;",">");								
+						        if(line.contains(FHIRResourceName)) 
+						        { 
+							       FHIRResourceFileName = file;
+							       scanner.close();
+							       return FHIRResourceFileName.getAbsolutePath();
+                                   
+						        }
+						        else
+						        {
+						        	lineNum++;
+						        }
+								
+					        }   
+				        } 
+				        catch(FileNotFoundException e) 
+				        { 
+				        	return "0";
+				        }
+			        }
+			    }
+	          return ("1");
+		    }
+	}
 
 	
       	public static String XMLAttributeValue(String Filename,String Node,String Tag,String Attribute,int i) throws ParserConfigurationException, SAXException, IOException

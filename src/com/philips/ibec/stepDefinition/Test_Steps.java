@@ -79,7 +79,7 @@ public class Test_Steps {
 			
 			try {
 			
-			String PractitionerresourceName = "Practitioner/U2246547";
+			String PractitionerresourceName = "Harold";
 			String practitionerFHIRXMLFileName = genericFunctionLib.getSpecificFHIRResource(fileFullPath, PractitionerresourceName);
 			System.out.println("practitionerFHIRXMLFileName:" + practitionerFHIRXMLFileName);
 			boolean res2 = practitioner.practitionerMapping(practitionerFHIRXMLFileName, hl7filepath);
